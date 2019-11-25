@@ -1,0 +1,70 @@
+export const image = {
+  hinh: require ('../../src/assets/images/photo.jpeg'),
+};
+const dataPostList = [
+  {
+    id: '1',
+    image: image.hinh,
+    require: 'I NEED AN INTEPRETER TO DO A JOB IN HCM',
+    name: 'Martin Curvey',
+    local: 'English, Korea',
+    city: 'TP Hồ Chí Minh',
+    money: '500.000',
+  },
+  {
+    id: '2',
+    image: image.hinh,
+    require: 'I NEED AN INTEPRETER TO DO A JOB IN HCM',
+    name: 'Martin Curvey',
+    local: 'English, Korea',
+    city: 'TP Hồ Chí Minh',
+    money: '500.000',
+  },
+  {
+    id: '3',
+    image: image.hinh,
+    require: 'I NEED AN INTEPRETER TO DO A JOB IN HCM',
+    name: 'Martin Curvey',
+    local: 'English, Korea',
+    city: 'TP Hồ Chí Minh',
+    money: '500.000',
+  },
+  {
+    id: '4',
+    image: image.hinh,
+    require: 'I NEED AN INTEPRETER TO DO A JOB IN HCM',
+    name: 'Martin Curvey',
+    local: 'English, Korea',
+    city: 'TP Hồ Chí Minh',
+    money: '500.000',
+  },
+  {
+    id: '5',
+    image: image.hinh,
+    require: 'I NEED AN INTEPRETER TO DO A JOB IN HCM',
+    name: 'Martin Curvey',
+    local: 'English, Korea',
+    city: 'TP Hồ Chí Minh',
+    money: '500.000',
+  },
+  {
+    id: '6',
+    image: image.hinh,
+    require: 'I NEED AN INTEPRETER TO DO A JOB IN HCM',
+    name: 'Martin Curvey',
+    local: 'English, Korea',
+    city: 'TP Hồ Chí Minh',
+    money: '500.000',
+  },
+  {
+    id: '7',
+    image: image.hinh,
+    require: 'I NEED AN INTEPRETER TO DO A JOB IN HCM',
+    name: 'Martin Curvey',
+    local: 'English, Korea',
+    city: 'TP Hồ Chí Minh',
+    money: '500.000',
+  },
+];
+
+export default dataPostList;
