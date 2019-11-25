@@ -9,7 +9,7 @@ export default class HeaderPerson extends Component {
     return (
       <View style={styles.container}>
         <Image
-          source={this.props.ImageView}
+          source={{uri : this.props.ImageView}}
           style={styles.imageStyle}
           resizeMode="cover"
         />

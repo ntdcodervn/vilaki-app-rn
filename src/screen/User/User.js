@@ -26,13 +26,14 @@ import ModalBirthday from '../../component/ModalBirthday'
 import axios from 'axios';
 import ModalPassword from '../../component/ModalPassword'
 import SelectMulti from 'react-native-select-multiple'
+import BASE_URL from '../../utils/misc';
 
 class User extends Component {
   constructor (props) {
     super (props);
     this.state = {
       indexUser: true,
-      userdata:[],
+      userdata:{},
       interpreterdata:[],
       indexInterpreter: 1,
       role : 'Khách hàng',
@@ -237,14 +238,14 @@ class User extends Component {
    
     let token = await AsyncStorage.getItem('Token');
     
-    let CheckToken = await axios.get(`${BASE_URL}/api/users/getById`,{
-      headers : {
-        'vilaki-auth-token' : token
-      }
-    })
+    // let CheckToken = await axios.get(`${BASE_URL}/api/users/getById`,{
+    //   headers : {
+    //     'vilaki-auth-token' : token
+    //   }
+    // })
   
    
-      this.setState({role : CheckToken.data.data.role.name})
+    //   this.setState({role : CheckToken.data.data.role.name})
 
     let response = await axios.get(`https://vilakyserverdemo.herokuapp.com/api/users/getById`,{
       headers : {
@@ -255,7 +256,8 @@ class User extends Component {
    
     console.log(response.data.data.avarta)
     this.setState({
-      userdata:response.data.data
+      userdata:response.data.data,
+      role : response.data.data.role.name
     })
    
    
@@ -639,28 +641,28 @@ class User extends Component {
                   color={colors.mainColor}
                 />
                 <Text style={styles.textStyle}>
-                {this.state.userdata.fullName ? this.state.userdata.fullName:'Not update'}
+                 Họ và tên :  {this.state.userdata.fullName ? this.state.userdata.fullName:'Not update'}
                 </Text>
               </View>
 
               <View style={styles.viewText}>
                 <FontAwesome
                   style={styles.iconStyle}
-                  name="question"
+                  name="calendar"
                   size={18}
                   color={colors.mainColor}
                 />
-              <Text style={styles.textStyle}>Tuổi : {this._birthday()}</Text>
+              <Text style={styles.textStyle}>Tuổi : {this._birthday() ? this._birthday() : 'Not update'}</Text>
               </View>
 
               <View style={styles.viewText}>
                 <FontAwesome
                   style={styles.iconStyle}
-                  name="smile-beam"
+                  name="phone"
                   size={18}
                   color={colors.mainColor}
                 />
-                <Text style={styles.textStyle}>{this.state.userdata.numberPhone ? this.state.userdata.numberPhone:'Not update'}</Text>
+                <Text style={styles.textStyle}> Số điện thoại : {this.state.userdata.numberPhone ? this.state.userdata.numberPhone:'Not update'}</Text>
               </View>
 
               <View style={styles.viewText}>
@@ -671,7 +673,7 @@ class User extends Component {
                   color={colors.mainColor}
                 />
                 <Text style={styles.textStyle}>
-                {this.state.userdata.locationWork  ?this.state.userdata.locationWork:'Not update'}
+                  Địa chỉ {this.state.userdata.locationWork  ?this.state.userdata.locationWork:'Not update'}
                 </Text>
               </View>
 
@@ -682,22 +684,22 @@ class User extends Component {
                   size={18}
                   color={colors.mainColor}
                 />
-  <Text style={styles.textStyle}>
-    {this.state.userdata.role ?this.state.userdata.role.name:'Not update'}
-    </Text>
+              <Text style={styles.textStyle}>
+                {this.state.userdata.role ?this.state.userdata.role.name:'Not update'}
+                </Text>
               </View>
 
               <View style={styles.viewText}>
                 <FontAwesome
                   style={styles.iconStyle}
-                  name="cog"
+                  name="font-awesome"
                   size={18}
                   color={colors.mainColor}
                 />
-  <Text style={styles.textStyle}>{this.state.userdata.national ? this.state.userdata.national:'Not update'}</Text>
+            <Text style={styles.textStyle}> Quốc tịch : {this.state.userdata.national ? this.state.userdata.national:'Not update'}</Text>
 
                 
-              </View>
+              </View >
                  
 
                 <TouchableHighlight
@@ -802,7 +804,7 @@ class User extends Component {
                     {label: 'American', value: 'American'},
                   ]}
                 />
-
+                <View style={ {flex : 1, justifyContent : 'center', alignItems : 'center'}}>
                 <TouchableHighlight
                   style={[styles.buttonStyle, {marginBottom: 10}]}
                   underlayColor="#fff"
@@ -812,6 +814,16 @@ class User extends Component {
                     Cập nhật
                   </Text>
                 </TouchableHighlight>
+                <TouchableHighlight
+                  style={[styles.buttonStyle, {marginBottom: 10}]}
+                  underlayColor="#fff"
+                  onPress={() => this._logout()}
+                >
+                  <Text style={styles.buttonTextStyle}>
+                    Đăng xuất
+                  </Text>
+                </TouchableHighlight>
+                </View>
               </View>
              
             </ScrollView>}
@@ -1074,17 +1086,17 @@ class User extends Component {
                   items={this.state.NNPD}
                   selectedItems={this.state.formInterpreter.ngonNguPhienDich.value}
                   onSelectionsChange={this.onSelectionsNNPD}/>
-
+            <View style={{ width : '100%' ,justifyContent : 'center',alignItems : 'center'}}></View>
               <TouchableHighlight
-                style={[styles.buttonStyle, {marginBottom: 10}]}
+                style={[styles.buttonInterpreter, {marginBottom: 10, marginTop : 20}]}
                 underlayColor="#fff"
                 onPress={() => this._submitForm ()}
               >
-                <Text style={styles.buttonTextStyle}>
+                <Text style={styles.buttonInterpreterText}>
                   Cập nhật
                 </Text>
               </TouchableHighlight>
-            </View>
+           </View>
           </ScrollView>
         </View>
       );
@@ -1100,7 +1112,7 @@ class User extends Component {
               color={colors.mainColor}
             />
             <Text style={styles.textStyle}>
-              Trần Đỗ Minh Ân
+              Họ và tên : {this.state.userdata.fullName}
             </Text>
           </View>
 
@@ -1111,7 +1123,7 @@ class User extends Component {
               size={18}
               color={colors.mainColor}
             />
-            <Text style={styles.textStyle}>Tuổi : 18</Text>
+            <Text style={styles.textStyle}>Ngày sinh : {this.state.userdata.birthDay ? this.state.userdata.birthDay : 'Not update'}</Text>
           </View>
 
           <View style={styles.viewText}>
@@ -1121,7 +1133,7 @@ class User extends Component {
               size={18}
               color={colors.mainColor}
             />
-            <Text style={styles.textStyle}>097888764</Text>
+            <Text style={styles.textStyle}>Số điện thoại : {this.state.userdata.numberPhone}</Text>
           </View>
 
           <View style={styles.viewText}>
@@ -1132,7 +1144,7 @@ class User extends Component {
               color={colors.mainColor}
             />
             <Text style={styles.textStyle}>
-              An@gmail.com
+            Email : {this.state.userdata.email}
             </Text>
           </View>
 
@@ -1173,7 +1185,7 @@ class User extends Component {
               size={18}
               color={colors.mainColor}
             />
-            <Text style={styles.textStyle}>Quốc tịch: Việt Nam</Text>
+            <Text style={styles.textStyle}>Quốc tịch: {this.state.userdata.national ? this.state.userdata.national.name : 'Not update'}</Text>
           </View>
 
           <View style={styles.viewText}>
@@ -1183,7 +1195,7 @@ class User extends Component {
               size={18}
               color={colors.mainColor}
             />
-            <Text style={styles.textStyle}>CMND: 123456789</Text>
+            <Text style={styles.textStyle}>CMND: {this.state.userdata.idCardNumber ? idCardNumber : 'Not update'}</Text>
           </View>
 
           <View style={styles.viewText}>
@@ -1193,7 +1205,7 @@ class User extends Component {
               size={18}
               color={colors.mainColor}
             />
-            <Text style={styles.textStyle}>Ngày cấp: 30/11/2012</Text>
+            <Text style={styles.textStyle}>Ngày cấp: {this.state.userdata.IdCardDate ? this.state.userdata.IdCardDate : 'Not update'}</Text>
           </View>
 
           <View style={{alignItems: 'center'}}>
@@ -1243,7 +1255,7 @@ class User extends Component {
               size={18}
               color={colors.mainColor}
             />
-            <Text style={styles.textStyle}>Tài khoản ngân hàng: 123456789</Text>
+            <Text style={styles.textStyle}>Tài khoản ngân hàng: {this.state.userdata.bankNumber ? this.state.userdata.bankNumber : 'Not update'}</Text>
           </View>
 
           <View style={styles.viewText}>
@@ -1254,7 +1266,7 @@ class User extends Component {
               color={colors.mainColor}
             />
             <Text style={styles.textStyle}>
-              Thuế thu nhập cá nhân: 123456789
+              Thuế thu nhập cá nhân: Not update
             </Text>
           </View>
 
@@ -1265,9 +1277,10 @@ class User extends Component {
               size={18}
               color={colors.mainColor}
             />
-            <Text style={styles.textStyle}>Nội dung: 123456789</Text>
+            <Text style={styles.textStyle}>Nội dung: Not update</Text>
           </View>
-
+                
+              <View style={{ width : '100%' ,justifyContent : 'center',alignItems : 'center'}}>
           <TouchableHighlight
                   style={[styles.buttonStyle, {marginBottom: 10}]}
                   underlayColor="#fff"
@@ -1280,7 +1293,7 @@ class User extends Component {
 
                   <ModalPassword isVisible={this.state.isVisiblePass}
                   onPressBtn={()=>this.setState({isVisiblePass : !this.state.isVisiblePass})}/>
-            <View>
+           
             <TouchableHighlight
                   style={[styles.buttonStyle, {marginBottom: 10}]}
                   underlayColor="#fff"
@@ -1297,19 +1310,28 @@ class User extends Component {
   };
 
   _logout = async () => {
+    let token = await AsyncStorage.getItem('Token');
+      let updateFcmToken = axios.post(`${BASE_URL}/api/users/updateFcmToken`,{
+        fcmToken  : ''
+      },{
+        headers : {
+            'vilaki-auth-token' : token
+        }
+      })
       let removeToken = await AsyncStorage.removeItem('Token');
       this.props.navigation.navigate('ChooselanguageSrceen')
   }
 
   render () {
-    const {userdata}=this.state;
-    if (this.state.role !== 'Khách hàng') {
+    
+    
+    if (this.state.role == 'Khách hàng') {
       return (
         <SafeAreaView style={{flex:1}}>
         <ScrollView style={{flex: 1}}>
          
           <HeaderPerson
-            ImageView={('https://vilakyserverdemo.herokuapp.com'+ userdata.avarta)}
+            ImageView={(`${BASE_URL}${this.state.userdata.avarta}`)}
             onPressSetting={() => this.onPressSettingUser ()}
           />
           <Tab
@@ -1320,16 +1342,8 @@ class User extends Component {
             numRight="0"
             textRight="Điểm"
           />
-          {this._renderUser ()}
-          <TouchableHighlight
-                  style={[styles.buttonStyle, {marginBottom: 10}]}
-                  underlayColor="#fff"
-                  onPress={() => this._logout()}
-                >
-                  <Text style={styles.buttonTextStyle}>
-                    Đăng xuất
-                  </Text>
-                </TouchableHighlight>
+          {this._renderUser()}
+          
                
         </ScrollView>
         </SafeAreaView>
@@ -1340,7 +1354,7 @@ class User extends Component {
         <ScrollView style={{flex: 1}}>
           
           <HeaderPerson
-             ImageView={('https://vilakyserverdemo.herokuapp.com'+ userdata.avarta)}
+             ImageView={('https://vilakyserverdemo.herokuapp.com'+ this.state.userdata.avarta)}
             onPressSetting={() => this.onPressSettingInterpreter ()}
           />
           <Tab
@@ -1375,9 +1389,11 @@ const styles = StyleSheet.create ({
     paddingBottom:7
   },
   buttonStyle: {
-    marginTop: 15,
-    marginHorizontal: 90,
-    borderRadius: 20,
+    width : '90%',
+    height : 50,
+    justifyContent : 'center',
+    alignItems : 'center',
+    borderRadius: 5,
     backgroundColor: colors.mainColor,
   },
   buttonTextStyle: {
@@ -1389,6 +1405,8 @@ const styles = StyleSheet.create ({
   },
   Container2: {
     flex: 1,
+    justifyContent : 'center',
+    alignItems : 'center'
   },
   textStyle: {
     fontSize: 18,
@@ -1429,10 +1447,12 @@ const styles = StyleSheet.create ({
   },
   buttonInterpreter: {
     marginHorizontal: 5,
-    borderRadius: 10,
-    height: 28,
+    borderRadius: 5,
+    height: 50,
     flex: 6,
     backgroundColor: colors.mainColor,
+    justifyContent : 'center',
+    alignItems : 'center'
   },
   buttonInterpreterText: {
     color: '#fff',

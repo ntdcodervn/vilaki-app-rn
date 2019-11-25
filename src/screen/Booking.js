@@ -39,40 +39,11 @@ export default class Booking extends Component {
     selectedEndDate: new Date(),
     checked1: false,
     checked2: false,
+    totalPrice : 0,
+    totalPriceOrigin : this.props.navigation.state.params.item.price ? this.props.navigation.state.params.item.price : 0
   };
 
-  handlerArray = value => {
-    let item = this.state.service;
-    this.state.listServices.map((value,key) => {
-
-    })
-    item.push (value);
-    // switch (value) {
-    //   case 'Dịch văn bản': {
-    //     this.setState ({checked1: !this.state.checked1});
-    //     if (this.state.checked1 == false) {
-    //       item.push (value);
-    //     } else if (this.state.checked1) {
-    //       const remove = item.filter (i => i != value);
-    //       this.setState({service: remove})
-    //     }
-    //     break;
-    //   }
-
-    //   case 'Phiên dịch': {
-    //     this.setState ({checked2: !this.state.checked2});
-    //     if (this.state.checked2 == false) {
-    //       item.push (value);
-    //     } else if (this.state.checked2) {
-    //       const remove = item.filter (i => i != value);
-    //       this.setState({service: remove})
-    //     }
-    //     break;
-    //   }
-
-    
-    // }
-  };
+  
 
    componentDidMount = async () => {
     let token = await AsyncStorage.getItem('Token');
@@ -93,6 +64,9 @@ export default class Booking extends Component {
         'vilaki-auth-token' : token
       }
     });
+
+    
+
     this.setState({
       listTypePay : s.data.data.map((value) => {
         return {
@@ -103,7 +77,8 @@ export default class Booking extends Component {
       listServices : s2.data.data.map((value)=> {
         return {
           label : value.name,
-          value : value._id
+          value : value._id,
+          price : value.price
         }
       }),
       listLocation : s3.data.data.map((value)=> {
@@ -113,7 +88,7 @@ export default class Booking extends Component {
         }
       })
     })
-      console.log(this.props.navigation.state.params.item)
+      console.log(this.state.listServices)
   }
 
   _onChangeLanguage = value => {
@@ -140,9 +115,22 @@ export default class Booking extends Component {
   };
 
   onSelectionsService = service => {
-    this.setState({listServices2: service})
+    let total = 0;
+   
+    
+    service.map((value,index) =>{
+      this.state.listServices.map((value2) => {
+        if(value.value == value2.value){
+          total += value2.price;
+        }
+      }) 
+      
+    })
+    this.setState({listServices2: service, totalPrice : this.state.totalPriceOrigin + total});
+   
   }
-
+  
+  
   onDateChange = (date, type) => {
     if (type === 'END_DATE') {
       this.setState ({
@@ -207,7 +195,7 @@ export default class Booking extends Component {
   };
 
   submit = async () => {
-    if(this.state.service == '' || this.state.location == '' || this.state.Type_pay == ''){
+    if(this.state.listServices2.length == 0 || this.state.location == '' || this.state.Type_pay == ''){
       alert('Vui lòng chọn tất cả các trường');
     }else {
       let token = await AsyncStorage.getItem('Token');
@@ -274,6 +262,25 @@ export default class Booking extends Component {
  
   }
 
+  renderChoiseServices = () => {
+    return ( this.state.listServices2.map((value, index) => {
+      
+      return (<View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+          alignItems: 'center',
+        }}
+      >
+        
+      <Text style={styles.textbill}>{index+1}.</Text>
+        <Text style={styles.textbill}>
+          {value.label}
+        </Text>
+        <Text style={styles.textbill}>$ {this.state.listServices[index].price}</Text></View>)
+    }))
+  }
+
   render () {
     return (
       <SafeAreaView>
@@ -337,20 +344,8 @@ export default class Booking extends Component {
             />
 
             <View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-around',
-                  alignItems: 'center',
-                }}
-              >
-                <Text style={styles.textbill}>1.</Text>
-                <Text style={styles.textbill}>
-                  Interpreter rental price
-                </Text>
-                <Text style={styles.textbill}>$ {this.props.navigation.state.params.item.price ? this.props.navigation.state.params.item.price : 0}</Text>
-              </View>
               
+                {this.renderChoiseServices()}
             </View>
             <View
               style={{
@@ -359,7 +354,7 @@ export default class Booking extends Component {
                 marginVertical: 15,
               }}
             />
-            <Text style={styles.total}>Total: $ {this.props.navigation.state.params.item.price ? this.props.navigation.state.params.item.price : 0}</Text>
+            <Text style={styles.total}>Total: $ {this.state.totalPrice}</Text>
             <TouchableOpacity
               onPress={() => this.submit()}
               style={styles.button}

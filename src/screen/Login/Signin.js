@@ -18,6 +18,8 @@ import Button from '../../component/Button';
 import Modal from 'react-native-modal';
 import AsyncStorage from '@react-native-community/async-storage'; 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Axios from 'axios';
+import BASE_URL from '../../utils/misc';
 
 class Signin extends Component {
   state = {
@@ -56,15 +58,25 @@ class Signin extends Component {
       let jsonResponse = await response.json();
       console.log(jsonResponse)
       if (jsonResponse.status == 200 && jsonResponse.role===typeUser) {
+        let fcmToken = await AsyncStorage.getItem ('fcmToken');
+        let updateFcmToken = Axios.post(`${BASE_URL}/api/users/updateFcmToken`,{
+              fcmToken  : fcmToken
+            },{
+              headers : {
+                  'vilaki-auth-token' : jsonResponse.token
+              }
+            })
         try{
-          AsyncStorage.getItem('Token',(error,result)=>{
+          AsyncStorage.getItem('Token',  (error,result)=>{
             AsyncStorage.mergeItem('Token',jsonResponse.token);
+           
+            
            
             this.setState({ isModalVisible: !this.state.isModalVisible });
           })
         }catch(error){
           AsyncStorage.setItem('Token',jsonResponse.token);
-         
+          
           this.setState({ isModalVisible: !this.state.isModalVisible });
         }
         
@@ -130,7 +142,8 @@ class Signin extends Component {
   //   this.setState ({isModalVisible: !this.state.isModalVisible});
   // };
 
-  _CheckPerson () {
+   _CheckPerson () {
+   
     if (this.props.person === 'user') {
       this.props.navigation.navigate ('DrawerNav');
     } else if (this.props.person === 'interpreter') {
